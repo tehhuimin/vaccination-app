@@ -79,6 +79,22 @@ class BookingView(APIView):
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    def put(self, request, uid, format=None):
+        """
+        Get list of vaccine centers
+        """
+        try: 
+            data = {
+                "id": uid,
+                "name": "Tan Ah Kow",
+                "centerName": "Bukit Timah CC",
+                "centerId": 3,
+                "startTime": "2021-12-01T09:00:00",
+            }
+            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+        except Exception as e: 
+            return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def delete(self, request, uid, format=None):
         """
         Get list of vaccine centers
