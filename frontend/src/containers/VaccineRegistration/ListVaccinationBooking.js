@@ -21,13 +21,27 @@ export function VaccineRegistrationListing () {
   const [bookings, setBookings] = useState([])
 
   useEffect(()=>{
+    getBookings()
+  }, [])
+
+  const getBookings = () => {
     axios.get(`http://localhost:8000/bookings`)
     .then(res=>{
       if(res.data.success){
         setBookings(res.data.data)
       }
     })
-  }, [])
+  }
+
+  const deleteBooking = (bookingId) => {
+    axios.delete(`http://localhost:8000/bookings/${bookingId}/`)
+    .then(res=>{
+      if(res.data.success){
+        getBookings()
+      }
+    })
+      
+  }
 
   return (
       <React.Fragment>
@@ -64,7 +78,7 @@ export function VaccineRegistrationListing () {
                         <Button component={Link} to={`/bookings/${row.id}`}>
                           <ModeEditIcon />
                         </Button>
-                        <Button>
+                        <Button onClick={()=> deleteBooking(row.id)}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
