@@ -38,9 +38,7 @@ export class VaccineRegistration extends Component {
   componentDidMount(){
     this.getVaccineCenter()    
   }
-  componentDidUpdate(){
-    this.getVaccineCenter() 
-  }
+
   handleSelect(event) {
     const state = this.state;
     this.setState({...state, selectedCenter: event.target.value});

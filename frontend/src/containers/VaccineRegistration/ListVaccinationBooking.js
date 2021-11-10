@@ -61,7 +61,7 @@ export function VaccineRegistrationListing () {
                         {new Date(row.startTime).toString()}
                       </TableCell>
                       <TableCell align="left">
-                        <Button component={Link} to='/bookings/1'>
+                        <Button component={Link} to={`/bookings/${row.id}`}>
                           <ModeEditIcon />
                         </Button>
                         <Button>
