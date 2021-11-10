@@ -17,25 +17,28 @@ export class EditVaccineRegistration extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCenter: 0, 
-      date: new Date(),
+      edited: false, 
       vaccineCenters: [], 
       booking: {
         "id": 0,
         "name": "", 
+        "selectedCenter": 0, 
+        "centerName": "",
+        "date": new Date()
       }
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.getVaccineCenter = this.getVaccineCenter.bind(this);
     this.getBooking = this.getBooking.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   
   getBooking(bookingId){
     axios.get(`http://localhost:8000/bookings/${bookingId}`)
     .then(res=>{
       if(res.data.success){
-        this.setState({...this.state, date: new Date(res.data.data.startTime), selectedCenter:res.data.data.centerId, booking: res.data.data  })
+        this.setState({...this.state, booking: res.data.data , edited: false })
       }
     })
   }
@@ -55,11 +58,36 @@ export class EditVaccineRegistration extends Component {
   }
   
   handleSelect(event) {
-    this.setState({ selectedCenter: event.target.value });
+    let selectedCenterId = event.target.value
+    let selectedCenterName = this.state.vaccineCenters.find(center => center.id === selectedCenterId)?.name || ''
+    this.setState({
+      ...this.state, 
+      edited: true, 
+      booking: {
+        ...this.state.booking, 
+        centerId: selectedCenterId, 
+        centerName: selectedCenterName
+    }});
   }
   handleDateChange(value) {
     const state = this.state;
-    this.setState({ ...state, date: value });
+    this.setState({ ...state, edited: true, booking: {...this.state.booking, date: value}});
+  }
+  handleSubmit(event) {
+    if (this.state.edited){
+      let data = this.state.booking
+      axios.put(`http://localhost:8000/bookings/${this.state.booking.id}/`, data)
+      .then(res=>{
+        if(res.data.success){
+          console.log("Success")
+          this.getBooking(this.props.match.params.bookingId)
+        }
+      })
+    }
+    else {
+      console.log("no changes made")
+    }
+    
   }
   render() {
     return (
@@ -86,6 +114,7 @@ export class EditVaccineRegistration extends Component {
               value={this.state.booking.id}
               sx={{mb: 2}}
               autoFocus
+              disabled
             />
             <TextField
               required
@@ -96,6 +125,7 @@ export class EditVaccineRegistration extends Component {
               sx={{mb: 2}}
               name="name"
               autoComplete="name"
+              disabled
             />
             <InputLabel id="vaccineCenterLabel">Vaccine Center</InputLabel>
             <Select
@@ -104,7 +134,7 @@ export class EditVaccineRegistration extends Component {
               required
               fullWidth
               id="vaccineCenter"
-              value={this.state.selectedCenter}
+              value={this.state.booking.centerId || 1}
               onChange={this.handleSelect}
               sx={{mb: 2}}
               defaultValue = "" 
@@ -120,15 +150,15 @@ export class EditVaccineRegistration extends Component {
             <DateTimePicker
               renderInput={(props) => <TextField {...props} />}
               label="Slot"
-              value={this.state.date}
+              value={this.state.booking.date || new Date()}
               onChange={this.handleDateChange}
               required
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={this.handleSubmit}
             >
               Register!
             </Button>
