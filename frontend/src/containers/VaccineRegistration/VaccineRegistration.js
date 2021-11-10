@@ -11,16 +11,7 @@ import {
 } from "@mui/material";
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import React, { Component } from "react";
-
-function getVaccineCenter() {
-  return [
-    { name: "None", id: 0},
-    { name: "Bukit Batok CC", id: 1 },
-    { name: "Bukit Panjang CC", id: 2 },
-    { name: "Bukit Timah CC", id: 3 },
-    { name: "Outram Park Polyclinic", id: 4 },
-  ];
-}
+import axios from 'axios';
 
 export class VaccineRegistration extends Component {
   constructor(props) {
@@ -28,9 +19,27 @@ export class VaccineRegistration extends Component {
     this.state = {
       selectedCenter: 0,
       date: new Date(),
+      allCenters: []
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.getVaccineCenter = this.getVaccineCenter.bind(this);
+  }
+
+  getVaccineCenter() {
+    axios.get(`http://localhost:8000/bookings/vaccine_centers`)
+    .then(res=>{
+      if(res.data.success){
+        this.setState({...this.state, allCenters: res.data.data})
+      }
+    })
+  }
+
+  componentDidMount(){
+    this.getVaccineCenter()    
+  }
+  componentDidUpdate(){
+    this.getVaccineCenter() 
   }
   handleSelect(event) {
     const state = this.state;
@@ -85,7 +94,7 @@ export class VaccineRegistration extends Component {
               onChange={this.handleSelect}
               sx={{mb: 2}}
             >
-              {getVaccineCenter().map((v) => {
+              {this.state.allCenters.map((v) => {
                 return <MenuItem key={v.id} value={v.id}>{v.name}</MenuItem>;
               })}
             </Select>

@@ -21,7 +21,7 @@ export function VaccineRegistrationListing () {
   const [bookings, setBookings] = useState([])
 
   useEffect(()=>{
-    axios.get(`http://localhost:8000/booking`)
+    axios.get(`http://localhost:8000/bookings`)
     .then(res=>{
       if(res.data.success){
         setBookings(res.data.data)

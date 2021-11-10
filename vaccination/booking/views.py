@@ -38,3 +38,23 @@ class GetBookingsView(APIView):
             return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetVaccineCenterView(APIView):
+    @swagger_auto_schema(
+        operation_description="Get list of vaccine centers", 
+    )
+    def get(self, request, format=None):
+        """
+        Get list of vaccine centers
+        """
+        try: 
+            data = [
+                { "name": "None", "id": 0},
+                { "name": "Bukit Batok CC", "id": 1 },
+                { "name": "Bukit Panjang CC", "id": 2 },
+                { "name": "Bukit Timah CC", "id": 3 },
+                { "name": "Outram Park Polyclinic", "id": 4 },
+            ]
+            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+        except Exception as e: 
+            return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
