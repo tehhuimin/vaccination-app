@@ -14,37 +14,22 @@ import {
 import { Link } from 'react-router-dom';
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 
-function getBooking() {
-  return [
-    {
-      id: 1,
-      name: "Tan Ah Kow",
-      centerName: "Bukit Timah CC",
-      centerId: 3,
-      startTime: new Date("2021-12-01T09:00:00"),
-    },
-    {
-      id: 2,
-      name: "Jean Lee Ah Meow",
-      centerName: "Bukit Timah CC",
-      centerId: 3,
-      startTime: new Date("2021-12-01T10:00:00"),
-    },
-    {
-      id: 3,
-      name: "Lew Ah Boi",
-      centerName: "Bukit Timah CC",
-      centerId: 3,
-      startTime: new Date("2021-12-01T11:00:00"),
-    },
-  ];
-}
+export function VaccineRegistrationListing () {
+  const [bookings, setBookings] = useState([])
 
-export class VaccineRegistrationListing extends Component {
-  render() {
-    return (
+  useEffect(()=>{
+    axios.get(`http://localhost:8000/booking`)
+    .then(res=>{
+      if(res.data.success){
+        setBookings(res.data.data)
+      }
+    })
+  }, [])
+
+  return (
       <React.Fragment>
         <CssBaseline />
         <Container>
@@ -63,7 +48,7 @@ export class VaccineRegistrationListing extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {getBooking().map((row) => (
+                  {bookings.map((row) => (
                     <TableRow
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -73,7 +58,7 @@ export class VaccineRegistrationListing extends Component {
                       </TableCell>
                       <TableCell align="left">{row.centerName}</TableCell>
                       <TableCell align="left">
-                        {row.startTime.toString()}
+                        {new Date(row.startTime).toString()}
                       </TableCell>
                       <TableCell align="left">
                         <Button component={Link} to='/bookings/1'>
@@ -93,4 +78,4 @@ export class VaccineRegistrationListing extends Component {
       </React.Fragment>
     );
   }
-}
+
