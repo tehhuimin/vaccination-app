@@ -33,6 +33,27 @@ class MyTest(TestCase):
         self.assertEqual(data1.get('startTime'), db_data1.date.strftime("%Y-%m-%d") )
         self.assertEqual(data1.get('timeSlot'), db_data1.time_slot )
 
+    def test_get_all_vaccine_centers(self): 
+        """
+            Test Case: GET /bookings/vaccine_centers
+            Test if API is able to retrieve a list of all vaccine_centers
+        """
+        response = self.client.get(reverse('get_vaccine_center'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('data' in response.json())
+        response_data = response.json()
+        self.assertTrue('success' in response_data)
+        self.assertTrue('data' in response_data)
+        response_data = response_data['data']
+
+        self.assertEqual(len(response_data), 6)
+
+        # # check booking data is correct
+        data1 = response_data[0]
+        db_data1 = VaccinationCenter.objects.get(id=data1.get('id'))
+        self.assertEqual(data1.get('id'), db_data1.id )
+        self.assertEqual(data1.get('name'), db_data1.name )
+
     def test_get_booking(self): 
         """
             Test Case: GET /bookings/<str:uid>/
