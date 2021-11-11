@@ -76,17 +76,12 @@ class BookingView(APIView):
     )
     def get(self, request, uid, format=None):
         """
-        Get list of vaccine centers
+        Get booking by id
         """
         try: 
-            data = {
-                "id": uid,
-                "name": "Tan Ah Kow",
-                "centerName": "Bukit Timah CC",
-                "centerId": 3,
-                "startTime": "2021-12-01T09:00:00",
-            }
-            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+            booking = Booking.objects.get(id=uid)
+            serializer = BookingSerializer(booking)
+            return JsonResponse(data = {"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

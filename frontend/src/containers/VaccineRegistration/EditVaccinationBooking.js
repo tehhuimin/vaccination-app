@@ -22,6 +22,7 @@ export class EditVaccineRegistration extends Component {
       booking: {
         "id": 0,
         "name": "", 
+        "NRIC": "",
         "selectedCenter": 0, 
         "centerName": "",
         "date": new Date()
@@ -111,7 +112,7 @@ export class EditVaccineRegistration extends Component {
               label="NRIC Number"
               name="NRIC"
               autoComplete="nric"
-              value={this.state.booking.id}
+              value={this.state.booking.NRIC}
               sx={{mb: 2}}
               autoFocus
               disabled
