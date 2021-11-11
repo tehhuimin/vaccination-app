@@ -77,7 +77,7 @@ class MyTest(TestCase):
     def tests_delete_booking(self):
         """
             Test Case: DELETE /bookings/<str:id>/
-            Test if API is able to delete user given the user's id
+            Test if API is able to delete booking given the booking id
         """
         booking_id = '2'
         response = self.client.delete(reverse('get_booking', args=[booking_id]))
