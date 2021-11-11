@@ -55,28 +55,11 @@ class NurseAvailability(models.Model):
             models.UniqueConstraint(fields=['NRIC', 'date', 'time_slot', 'center'], name='nurse_availability')
         ]
 
-
-# # Vaccination Center Availability
-# class CenterAvailability(models.Model): 
-#     center = models.ForeignKey(VaccinationCenter, on_delete=models.CASCADE)
-#     date = models.DateField()
-#     time_slot = models.IntegerField(choices=TimeSlotChoices.choices(), default=TimeSlotChoices.AM10_AM11)
-#     slot_capaciity = models.IntegerField(default=0)
-#     available_capacity = models.IntegerField(default=0)
-
-#     class Meta: 
-#         constraints = [
-#             models.UniqueConstraint(
-#                 fields=['center', 'date', 'time_slot'], 
-#                 name='vaccination_center_availability'
-#             )
-#         ]
-
 # Booking
 class Booking(models.Model): 
+    id = models.AutoField(primary_key=True)
     center = models.ForeignKey(VaccinationCenter, on_delete=models.CASCADE)
     date = models.DateField()
     time_slot = models.IntegerField(choices=TimeSlotChoices.choices(), default=TimeSlotChoices.AM10_AM11)
-    NRIC = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-
+    NRIC = models.OneToOneField(User, on_delete=models.CASCADE)
 
