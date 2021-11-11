@@ -2,6 +2,7 @@ from django.http import JsonResponse, response
 from rest_framework import status
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
+import json
 
 class GetBookingsView(APIView):
     @swagger_auto_schema(
@@ -59,6 +60,18 @@ class GetVaccineCenterView(APIView):
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class NewBookingVIew(APIView): 
+    def post(self, request, format=None):
+        """
+        Register a slot
+        """
+        try: 
+            data = json.loads(request.body)
+            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+        except Exception as e: 
+            return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+
 class BookingView(APIView):
     @swagger_auto_schema(
         operation_description="Get booking by id", 
@@ -78,19 +91,13 @@ class BookingView(APIView):
             return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
     def put(self, request, uid, format=None):
         """
         Get list of vaccine centers
         """
         try: 
-            data = {
-                "id": uid,
-                "name": "Tan Ah Kow",
-                "centerName": "Bukit Timah CC",
-                "centerId": 3,
-                "startTime": "2021-12-01T09:00:00",
-            }
+            data = json.loads(request.body)
             return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -101,13 +108,12 @@ class BookingView(APIView):
         """
         try: 
             data = {
-                "id": uid,
+                "id": uid,  
                 "name": "Tan Ah Kow",
                 "centerName": "Bukit Timah CC",
                 "centerId": 3,
                 "startTime": "2021-12-01T09:00:00",
             }
-            print("delete", uid)
             return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

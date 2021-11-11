@@ -8,6 +8,11 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle
 } from "@mui/material";
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import React, { Component } from "react";
@@ -19,11 +24,19 @@ export class VaccineRegistration extends Component {
     this.state = {
       selectedCenter: 0,
       date: new Date(),
-      allCenters: []
+      allCenters: [], 
+      NRIC: "", 
+      name: "", 
+      alertOpen: false
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.getVaccineCenter = this.getVaccineCenter.bind(this);
+    this.handleNRICChange = this.handleNRICChange.bind(this); 
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleClickOpen = this.handleClickOpen.bind(this); 
+    this.handleClose = this.handleClose.bind(this);
   }
 
   getVaccineCenter() {
@@ -47,6 +60,34 @@ export class VaccineRegistration extends Component {
     const state = this.state;
     this.setState({...state, date: value});
   }
+  handleNameChange(event) {
+    this.setState({...this.state, name: event.target.value})
+  }
+  handleNRICChange(event) {
+    this.setState({...this.state, NRIC: event.target.value})
+  }
+  handleSubmit() {
+    let data = {
+      "NRIC": this.state.NRIC, 
+      "name": this.state.name, 
+      "centerId": this.state.selectedCenter, 
+      "timeSlot": this.state.date
+    }
+    axios.post('http://localhost:8000/bookings/add', data )
+    .then(res => {
+      if (res.data.success) {
+        this.handleClickOpen()
+      }
+    })
+  }
+
+  handleClickOpen() {
+    this.setState({...this.state, alertOpen: true});
+  };
+
+  handleClose(){
+    this.setState({...this.state, alertOpen: false});
+  };
   render() {
     return (
       <React.Fragment>
@@ -70,6 +111,7 @@ export class VaccineRegistration extends Component {
               name="NRIC"
               autoComplete="nric"
               sx={{mb: 2}}
+              onChange={this.handleNRICChange}
               autoFocus
             />
             <TextField
@@ -79,6 +121,7 @@ export class VaccineRegistration extends Component {
               label="Full Name"
               name="name"
               autoComplete="name"
+              onChange={this.handleNameChange}
               sx={{mb: 2}}
             />
             <InputLabel id="vaccineCenterLabel">Vaccine Center</InputLabel>
@@ -104,15 +147,35 @@ export class VaccineRegistration extends Component {
               required
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={this.handleSubmit}
             >
               Register!
             </Button>
           </Box>
         </Container>
+        <Dialog
+        open={this.state.alertOpen}
+        onClose={this.handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+            Success
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Registration Successful!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose} autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       </React.Fragment>
     );
   }
