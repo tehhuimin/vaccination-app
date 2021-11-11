@@ -36,7 +36,7 @@ class Nurse(models.Model):
 # Vaccination Center 
 class VaccinationCenter(models.Model): 
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     max_capacity = models.IntegerField(default=0)
 
     def __str__(self):
