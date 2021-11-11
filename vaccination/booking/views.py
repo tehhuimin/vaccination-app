@@ -102,13 +102,10 @@ class BookingView(APIView):
         Get list of vaccine centers
         """
         try: 
-            data = {
-                "id": uid,  
-                "name": "Tan Ah Kow",
-                "centerName": "Bukit Timah CC",
-                "centerId": 3,
-                "startTime": "2021-12-01T09:00:00",
-            }
-            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+            booking = Booking.objects.get(id=uid)
+            booking.delete()
+            return JsonResponse(data = {'success': True}, status=status.HTTP_200_OK)
+        except Booking.DoesNotExist as e: 
+            return JsonResponse({'error': e,'success': False}, status=status.HTTP_404_NOT_FOUND) 
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
