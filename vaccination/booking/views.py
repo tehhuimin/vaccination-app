@@ -16,30 +16,10 @@ class GetBookingsView(APIView):
         Read all bookings data
         """
         try: 
-            data = [
-                {
-                    "id": 1,
-                    "name": "Tan Ah Kow",
-                    "centerName": "Bukit Timah CC",
-                    "centerId": 3,
-                    "startTime": "2021-12-01T09:00:00",
-                },
-                {
-                    "id": 2,
-                    "name": "Jean Lee Ah Meow",
-                    "centerName": "Bukit Timah CC",
-                    "centerId": 3,
-                    "startTime": "2021-12-01T10:00:00",
-                },
-                {
-                    "id": 3,
-                    "name": "Lew Ah Boi",
-                    "centerName": "Bukit Timah CC",
-                    "centerId": 3,
-                    "startTime": "2021-12-01T11:00:00",
-                },
-            ]
-            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+            data = Booking.objects.all()
+            serializer = BookingSerializer(data, many=True)
+            # TODO: serialize enum
+            return JsonResponse(data = {"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
