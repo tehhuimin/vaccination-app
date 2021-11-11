@@ -231,6 +231,35 @@ class MyTest(TestCase):
         self.nurses_availability_created = [NurseAvailability.objects.create(NRIC=Nurse.objects.get(NRIC = availability.pop("NRIC")), center=VaccinationCenter.objects.get(id=availability.pop('center')), **availability) for availability in nurses_availability_list]
         self.all_bookings = [Booking.objects.create(center=VaccinationCenter.objects.get(id = booking.pop('center')), NRIC=User.objects.get(NRIC=booking.pop("NRIC")),  **booking) for booking in booking_list]
 
+    def test_get_all_bookings(self): 
+        """
+            Test Case: GET /bookings
+            Test if API is able to retrieve a list of all bookings
+        """
+        response = self.client.get(reverse('get_bookings'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('data' in response.json())
+        response_data = response.json()
+        self.assertTrue('success' in response_data)
+        self.assertTrue('data' in response_data)
+        response_data = response_data['data']
+
+        self.assertEqual(len(response_data), 5)
+
+        # check booking data is correct
+        data1 = response_data[0]
+        db_data1 = Booking.objects.get(id=data1.get('id'))
+        self.assertEqual(data1.get('id'), db_data1.id )
+        self.assertEqual(data1.get('name'), db_data1.NRIC.name )
+        self.assertEqual(data1.get('NRIC'), db_data1.NRIC.NRIC )
+        self.assertEqual(data1.get('centerName'), db_data1.center.name )
+        self.assertEqual(data1.get('centerId'), db_data1.center.id )
+        self.assertEqual(data1.get('startTime'), db_data1.date.strftime("%Y-%m-%d") )
+        self.assertEqual(data1.get('timeSlot'), db_data1.time_slot )
+
+
+
+
 
 
         
