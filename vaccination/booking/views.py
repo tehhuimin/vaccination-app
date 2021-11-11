@@ -86,6 +86,6 @@ class BookingView(APIView):
             booking.delete()
             return JsonResponse(data = {'success': True}, status=status.HTTP_200_OK)
         except Booking.DoesNotExist as e: 
-            return JsonResponse({'error': e,'success': False}, status=status.HTTP_404_NOT_FOUND) 
+            return JsonResponse(data = {'error': str(e),'success': False}, status=status.HTTP_404_NOT_FOUND) 
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

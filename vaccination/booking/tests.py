@@ -96,6 +96,21 @@ class MyTest(TestCase):
         self.assertFalse(response_data['success'])
         self.assertEqual(response_data['error'], 'Booking matching query does not exist.')
     
+    def tests_delete_booking_id_not_found(self):
+        """
+            Test Case: DELETE /bookings/<str:id>/
+            Test if API is able to return 404 is booking id not found
+        """
+        booking_id = '200'
+        response = self.client.delete(reverse('get_booking', args=[booking_id]))
+
+        # check response format
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue('error' in response.json())
+        response_data = response.json()
+        self.assertFalse(response_data['success'])
+        self.assertEqual(response_data['error'], 'Booking matching query does not exist.')
+    
 
 
 
