@@ -82,6 +82,8 @@ class BookingView(APIView):
             booking = Booking.objects.get(id=uid)
             serializer = BookingSerializer(booking)
             return JsonResponse(data = {"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
+        except Booking.DoesNotExist as e:  # Throw Error 404 if data doesn't exist.  
+            return JsonResponse({'error': str(e), 'success': False}, status=status.HTTP_404_NOT_FOUND) 
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
