@@ -13,8 +13,21 @@ class TimeSlotChoices(IntEnum):
     PM05_PM06 = 8
 
     @classmethod
-    def choices(cls):
-        return [(key.value, key.name) for key in cls]
+    def choices(cls, list=None):
+        names = {
+            1 : "10:00 - 11:00",
+            2 : "11:00 - 12:00",
+            3 : "12:00 - 13:00",
+            4 : "13:00 - 14:00", 
+            5 : "14:00 - 15:00",
+            6 : "15:00 - 16:00",
+            7 : "16:00 - 17:00",
+            8 : "17:00 - 18:00"
+        }
+        if list: 
+            return [(key, names[key]) for key in list]
+        
+        return [(key.value, names[key.value]) for key in cls]
 
 # User (Patient)
 class User(models.Model):

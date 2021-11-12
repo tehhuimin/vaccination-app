@@ -38,6 +38,31 @@ class GetVaccineCenterView(APIView):
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class GetAvailableTimeSlots(APIView):
+
+    @swagger_auto_schema(
+        operation_description="Get available slots by filtering time_slot and center_id", 
+        manual_parameters = [
+            openapi.Parameter('date', openapi.IN_QUERY, description="date in YY-MM-DD format", type=openapi.TYPE_STRING), 
+            openapi.Parameter('center_id', openapi.IN_QUERY, description="center_id", type=openapi.TYPE_INTEGER), 
+        ]
+    )
+    def get(self, request):
+        try: 
+            selected_date = request.GET.get('date', None)
+            center_id = request.GET.get('center_id', None)
+            if center_id and selected_date: 
+                slots_available = get_list_of_slots_available(center_id, selected_date)
+                data = TimeSlotChoices.choices(slots_available)
+            else:
+                data = TimeSlotChoices.choices()
+            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+        except VaccinationCenter.DoesNotExist as e: 
+            return JsonResponse({'error': str(e), 'success': False}, status=status.HTTP_404_NOT_FOUND) 
+        except Exception as e: 
+            return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+
+
 class NewBookingVIew(APIView): 
     def post(self, request, format=None):
         """

@@ -14,7 +14,7 @@ import {
   DialogContentText, 
   DialogTitle
 } from "@mui/material";
-import DateTimePicker from '@mui/lab/DateTimePicker';
+import DatePicker from '@mui/lab/DatePicker';
 import React, { Component } from "react";
 import axios from 'axios';
 
@@ -27,6 +27,8 @@ export class VaccineRegistration extends Component {
       allCenters: [], 
       NRIC: "", 
       name: "", 
+      timeSlotSelected: "", 
+      timeSlots: [], 
       alertOpen: false
     };
     this.handleSelect = this.handleSelect.bind(this);
