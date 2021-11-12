@@ -64,13 +64,29 @@ class GetAvailableTimeSlots(APIView):
 
 
 class NewBookingVIew(APIView): 
+    @swagger_auto_schema(
+        request_body=CreateBookingSerializer
+    )
     def post(self, request, format=None):
         """
         Register a slot
         """
         try: 
-            data = json.loads(request.body)
-            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+            received_data = json.loads(request.body)
+            serializer = CreateBookingSerializer(received_data)
+            serialized_data = serializer.data
+            user, _ = User.objects.get_or_create(
+                    NRIC = serialized_data.get('NRIC', None),
+                    name = serialized_data.get('name', None),
+                )
+            booking_created = Booking.objects.create(
+                center=VaccinationCenter.objects.get(id = serialized_data.get('centerId', None)), 
+                date = serialized_data.get('date', None),
+                time_slot = serialized_data.get('time_slot', None), 
+                NRIC = user
+            )
+            created_serializer = BookingSerializer(booking_created)
+            return JsonResponse(data = {"success": True, "data": created_serializer.data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
