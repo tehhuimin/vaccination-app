@@ -55,7 +55,11 @@ class GetAvailableTimeSlots(APIView):
             center_id = request.GET.get('center_id', None)
             if center_id and selected_date: 
                 slots_available = get_list_of_slots_available(center_id, selected_date)
-                data = TimeSlotChoices.choices(slots_available)
+                print(slots_available)
+                if len(slots_available) == 0: 
+                    data = []
+                else:
+                    data = TimeSlotChoices.choices(slots_available)
             else:
                 data = TimeSlotChoices.choices()
             return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)

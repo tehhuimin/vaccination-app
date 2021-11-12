@@ -205,7 +205,7 @@ export class VaccineRegistration extends Component {
               required
               fullWidth
               id="timeSlot"
-              value={this.state.timeSlotSelected}
+              value={this.state.timeSlotSelected || 'default'}
               onChange={this.handleSelectTimeSlot}
               description="Please select time slot"
               sx={{mb: 2}}
