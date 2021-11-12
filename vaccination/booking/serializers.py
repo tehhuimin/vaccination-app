@@ -36,3 +36,13 @@ class CreateBookingSerializer(serializers.ModelSerializer):
         fields = ( 'name', 'NRIC', 'centerId', 'date', 'time_slot')
 
 
+class UpdateBookingSerializer(serializers.ModelSerializer):
+    centerId = serializers.IntegerField()
+    date = serializers.DateField()
+    time_slot = serializers.IntegerField()
+
+    class Meta: 
+        model = Booking
+        fields = ('centerId', 'date', 'time_slot')
+
+

@@ -19,9 +19,11 @@ import axios from 'axios';
 
 export function VaccineRegistrationListing () {
   const [bookings, setBookings] = useState([])
+  const [timeSlots, setTimeSlots] = useState([])
 
   useEffect(()=>{
     getBookings()
+    getTimeSlots()
   }, [])
 
   const getBookings = () => {
@@ -29,6 +31,15 @@ export function VaccineRegistrationListing () {
     .then(res=>{
       if(res.data.success){
         setBookings(res.data.data)
+      }
+    })
+  }
+
+  const getTimeSlots = () => {
+    axios.get(`http://localhost:8000/bookings/time_slots`)
+    .then(res=>{
+      if(res.data.success){
+        setTimeSlots(res.data.data)
       }
     })
   }
@@ -57,11 +68,12 @@ export function VaccineRegistrationListing () {
                   <TableRow>
                     <TableCell>Name</TableCell>
                     <TableCell align="left">Center Name</TableCell>
-                    <TableCell align="left">Start Time</TableCell>
+                    <TableCell align="left">Time Slot</TableCell>
                     <TableCell align="left">&nbsp;</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  {console.log(bookings)}
                   {bookings.map((row) => (
                     <TableRow
                       key={row.id}
@@ -72,7 +84,8 @@ export function VaccineRegistrationListing () {
                       </TableCell>
                       <TableCell align="left">{row.centerName}</TableCell>
                       <TableCell align="left">
-                        {new Date(row.startTime).toString()}
+                        {row.startTime + " " + timeSlots.find(slot => slot[0] ===row.timeSlot)[1]}
+                        {/* {new Date(row.startTime).toString()} */}
                       </TableCell>
                       <TableCell align="left">
                         <Button component={Link} to={`/bookings/${row.id}`}>

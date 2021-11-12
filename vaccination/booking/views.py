@@ -110,13 +110,32 @@ class BookingView(APIView):
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @swagger_auto_schema(
+        request_body=UpdateBookingSerializer, 
+        description="Edit an existing booking"
+    )
     def put(self, request, uid, format=None):
         """
-        Get list of vaccine centers
+        Edit an existing booking
         """
         try: 
-            data = json.loads(request.body)
-            return JsonResponse(data = {"success": True, "data": data}, status=status.HTTP_200_OK)
+            received_data = json.loads(request.body)
+            serializer = UpdateBookingSerializer(received_data)
+            serialized_data = serializer.data
+            booking = Booking.objects.get(
+                id = uid
+            )
+            if 'centerId' in serialized_data:
+                booking.center = VaccinationCenter.objects.get(id = serialized_data.get('centerId'))
+                print(booking.center)
+            if 'time_slot' in serialized_data:
+                booking.time_slot = serialized_data.get('time_slot', None)
+            if 'date' in serialized_data:
+                booking.date = serialized_data.get('date',None)            
+
+            booking.save()
+            print("booking center", booking )
+            return JsonResponse(data = {"success": True, "data": serialized_data}, status=status.HTTP_200_OK)
         except Exception as e: 
             return JsonResponse(data={'error': str(e), 'success': False}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
