@@ -2,7 +2,9 @@ from django.http import JsonResponse, response
 from rest_framework import status
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 import json
+from .utils import get_list_of_slots_available
 
 from .models import *
 from .serializers import * 
@@ -124,7 +126,9 @@ class BookingView(APIView):
         """
         try: 
             booking = Booking.objects.get(id=uid)
+            user = booking.NRIC
             booking.delete()
+            user.delete()
             return JsonResponse(data = {'success': True}, status=status.HTTP_200_OK)
         except Booking.DoesNotExist as e: 
             return JsonResponse(data = {'error': str(e),'success': False}, status=status.HTTP_404_NOT_FOUND) 
