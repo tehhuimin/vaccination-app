@@ -236,7 +236,7 @@ export class EditVaccineRegistration extends Component {
               sx={{ mt: 3, mb: 2 }}
               onClick={this.handleSubmit}
             >
-              Register!
+              Update!
             </Button>
 
 
