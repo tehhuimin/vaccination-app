@@ -21,4 +21,5 @@ services:
       ports:
           - 5432:5432
       environment:
-          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_USERNAME=${DATABASE_USERNAME}
+          - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
